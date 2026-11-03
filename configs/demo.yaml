@@ -1,0 +1,13 @@
+# Fast CPU run on data created by scripts/make_demo.py.
+seed: 7
+rounds: 10
+local_epochs: 1
+batch_size: 32
+hidden_dim: 64
+embedding_dim: 16
+residual_width: 16
+lr: 0.01
+prototype_scope: batch
+primary_metric: macro_f1
+device: cpu
+threads: 1
