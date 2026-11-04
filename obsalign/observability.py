@@ -120,8 +120,11 @@ def estimate(sketches, cfg):
                     value = torch.exp(-error / (2 * cfg.tau_c))
                     consistency[first, second, semantic] = value
                     consistency[second, first, semantic] = value
-    score = torch.sigmoid(cfg.alpha * bridge + cfg.beta * consistency + cfg.eta * side_support
-                          - cfg.delta * uncertainty - cfg.b0)
+    # Eq. (6): expm1 preserves small positive bridge evidence in 1 - exp(-bridge).
+    bridge_sufficiency = -torch.expm1(-bridge)
+    score = bridge_sufficiency * torch.sigmoid(
+        cfg.alpha * bridge + cfg.beta * consistency + cfg.eta * side_support
+        - cfg.delta * uncertainty - cfg.b0)
     offdiag = (~torch.eye(m, dtype=torch.bool))[:, :, None]
     score *= offdiag
     gate = relation_gate(score, cfg.tau_low, cfg.tau_high)
