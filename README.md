@@ -6,29 +6,6 @@ ObsAlign estimates whether a modality pair is supported for each semantic anchor
 The resulting scores control alignment, missing-modality calibration and aggregation
 across heterogeneous data sources. Source-private residuals remain local.
 
-## Observability score
-
-The score in `obsalign/observability.py` follows Eq. (6) of the paper:
-
-$$
-O_{m,n,s} = \left(1-e^{-\mathrm{Bridge}_{m,n,s}}\right)
-\sigma\!\left(\alpha\,\mathrm{Bridge}_{m,n,s}
-+\beta\,\mathrm{Cons}_{m,n,s}+\eta\,\mathrm{Supp}_{m,n,s}
--\delta\,\mathrm{Unc}_{m,n,s}-b_0\right).
-$$
-
-Here $\mathrm{Bridge}_{m,n,s}=\log(1+D_{m,n,s}+\gamma_{\mathrm{path}}P_{m,n,s})$,
-where $D$ is direct bridge evidence and $P$ is multi-hop path evidence. The bridge
-sufficiency factor is equivalently
-$(D+\gamma_{\mathrm{path}}P)/(1+D+\gamma_{\mathrm{path}}P)$.
-Thus, a relation with neither direct nor multi-hop bridge evidence has zero
-observability and zero alignment gate, even when both modalities have side support.
-Path-only evidence can give positive observability when `gamma_path > 0`.
-
-The implementation uses `-torch.expm1(-bridge)` to evaluate the factor accurately
-for small bridge values. Defaults are
-$(\alpha,\beta,\eta,\delta,b_0)=(1,1,0.5,1,0)$.
-Run the equation regression checks from the repository root with:
 
 ```bash
 python -m unittest discover -s tests -v
