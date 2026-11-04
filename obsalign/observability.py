@@ -1,4 +1,3 @@
-"""Closed-form transport and exact observability components, Eqs. (5)-(7), (14)-(24)."""
 from dataclasses import dataclass
 import torch
 
